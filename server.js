@@ -37,6 +37,48 @@ function addEmployeeDB() {
     })
     
 }
+
+function addRoleDB() {
+    inquirer
+        .prompt([
+
+            {
+                type: 'input',
+                message: 'enter role title?',
+                name: 'role'
+            },
+            {
+                type: 'input',
+                message: 'enter salary?',
+                name: 'salary'
+            },
+            {
+                type: 'input',
+                message: 'Add new role?',
+                name: 'newRole'
+            },
+        ])
+        .then((answers) => {
+            console.log(answers);
+        })
+
+}
+
+function addDepartment() {
+    inquirer
+        .prompt([
+
+            {
+                type: 'input',
+                message: 'Department title?',
+                name: 'addDepartment'
+            },
+        ])
+        .then((answers) => {
+            console.log(answers);
+        })
+
+}
 function init() {
     inquirer
         .prompt([
@@ -56,6 +98,12 @@ function init() {
             switch (userResponse) {
                 case 'Add employee':
                     addEmployeeDB();
+                    break;
+                case 'Update Employee Role':
+                    addRoleDB();
+                    break;
+                case 'Add Department':
+                    addDepartment();
                     break;
             }
 
