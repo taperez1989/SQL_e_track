@@ -1,16 +1,66 @@
 const inquirer = require("inquirer");
+// const prompts = new Rx.Subject();
+// inquirer.prompt(prompts);
+function addEmployeeDB() {
+    inquirer
+        .prompt([
 
-inquirer
-    .prompt([
+            {
+                type: 'input',
+                message: 'enter first name?',
+                name: 'firstName'
+            },
+            {
+                type: 'input',
+                message: 'enter last name?',
+                name: 'lastName'
+            },
+            {
+                type: 'input',
+                message: 'enter role id?',
+                name: 'role'
+            },
+            {
+                type: 'input',
+                message: 'Add another employee?',
+                name: 'newEmployee'
+            },
+            // {
+            // //     type: 'input',
+            // //     message: 'enter first name?',
+            // //     name: 'name'
+            // // },
+        ])
+        // call on DB inquierer docu look into 'options'
+        .then((answers) => {
+            console.log(answers);
+    })
+    
+}
+function init() {
+    inquirer
+        .prompt([
 
-        {
-            type: 'input',
-            message: 'What would you like to do?',
-            choices: ['Add employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department'],
-            name: 'choices',
-        },
-    ])
+            {
+                type: 'list',
+                message: 'What would you like to do?',
+                choices: ['Add employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department'],
+                name: 'choices',
+            },
+        ])
+        .then((answers) => {
+            console.log(answers.choices);
+            
+            const userResponse = answers.choices;
 
+            switch (userResponse) {
+                case 'Add employee':
+                    addEmployeeDB();
+                    break;
+            }
+
+    })
+};
 
 // // index.js
 // const inquirer = require('inquirer');
@@ -69,3 +119,4 @@ inquirer
 //             console.error('Error:', error);
 //         });
 // }
+init();
