@@ -1,4 +1,5 @@
 const inquirer = require("inquirer");
+const db = require('./connection');
 // const prompts = new Rx.Subject();
 // inquirer.prompt(prompts);
 function addEmployeeDB() {
@@ -21,7 +22,7 @@ function addEmployeeDB() {
                 name: 'role'
             },
             {
-                type: 'input',
+                type: 'confirm',
                 message: 'Add another employee?',
                 name: 'newEmployee'
             },
@@ -33,27 +34,33 @@ function addEmployeeDB() {
         ])
         // call on DB inquierer docu look into 'options'
         .then((answers) => {
-            console.log(answers);
+            console.log(answers.confirm);
     })
     
 }
 
 function addRoleDB() {
-    inquirer
+      inquirer
         .prompt([
 
             {
                 type: 'input',
-                message: 'enter role title?',
+                message: 'what is the name of the role?',
                 name: 'role'
             },
             {
                 type: 'input',
-                message: 'enter salary?',
+                message: 'enter the salary of the role?',
                 name: 'salary'
             },
             {
-                type: 'input',
+                type: 'list',
+                message: 'What department does the role belong to?',
+                choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service'],
+                name: 'departmentName'
+            },
+            {
+                type: 'confirm',
                 message: 'Add new role?',
                 name: 'newRole'
             },
@@ -70,12 +77,20 @@ function addDepartment() {
 
             {
                 type: 'input',
-                message: 'Department title?',
+                message: 'What is the name of the department?',
                 name: 'addDepartment'
             },
         ])
         .then((answers) => {
-            console.log(answers);
+            console.log(answers);  // { addDepartment: "Test" }
+            // this would be our ASYNC request to our database (for data)
+            db.query("SELECT * FROM department;", function (error, data) {
+                if (error) {
+                    console.log("error: ", error)
+                }
+
+                console.log("data: ", data)
+            })
         })
 
 }
@@ -99,7 +114,7 @@ function init() {
                 case 'Add employee':
                     addEmployeeDB();
                     break;
-                case 'Update Employee Role':
+                case 'Add Role':
                     addRoleDB();
                     break;
                 case 'Add Department':
