@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const db = require('./connection');
-// const prompts = new Rx.Subject();
-// inquirer.prompt(prompts);
+
+
 function addEmployeeDB() {
     inquirer
         .prompt([
@@ -17,8 +17,9 @@ function addEmployeeDB() {
                 name: 'lastName'
             },
             {
-                type: 'input',
-                message: 'enter role id?',
+                type: 'list',
+                message: 'enter employees role?',
+                choices: ['Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Leader', 'Lawyer'],
                 name: 'role'
             },
             {
@@ -27,9 +28,10 @@ function addEmployeeDB() {
                 name: 'newEmployee'
             },
             // {
-            // //     type: 'input',
-            // //     message: 'enter first name?',
-            // //     name: 'name'
+            // //     type: 'list',
+            // //     message: 'Who is the employees manager?',
+                    // choice: []
+            // //     name: 'manager'
             // // },
         ])
         // call on DB inquierer docu look into 'options'
@@ -39,6 +41,7 @@ function addEmployeeDB() {
     
 }
 
+// adds role to database
 function addRoleDB() {
       inquirer
         .prompt([
@@ -71,6 +74,7 @@ function addRoleDB() {
 
 }
 
+// adds department to database
 function addDepartment() {
     inquirer
         .prompt([
@@ -81,19 +85,37 @@ function addDepartment() {
                 name: 'addDepartment'
             },
         ])
-        .then((answers) => {
-            console.log(answers);  // { addDepartment: "Test" }
-            // this would be our ASYNC request to our database (for data)
-            db.query("SELECT * FROM department;", function (error, data) {
-                if (error) {
-                    console.log("error: ", error)
-                }
-
-                console.log("data: ", data)
-            })
+        .then((data) => {
+            console.log(data); 
+           
         })
 
 }
+
+// this would be our ASYNC request to our database (for data)
+// function departmentsDB() {
+//     db.query("SELECT * FROM department;", function (error, data) {
+//         if (error) {
+//             console.log("error: ", error)
+//         }
+
+//         console.log("data: ", data)
+//     })
+// }
+
+//     // views the role database
+// function viewRoleDB() {
+//     const query = 'SELECT * FROM role';
+//     db.query(query, function (error, data) {
+//         if (error) {
+//             console.log("error: ", error)
+//             db.end();
+//         }
+
+//         console.log("data: ", data)
+//     });
+// }
+
 function init() {
     inquirer
         .prompt([
@@ -120,66 +142,20 @@ function init() {
                 case 'Add Department':
                     addDepartment();
                     break;
+                case 'View All Departments':
+                    // departmentsDB();
+                        fetch('/api/departments', {
+                            method: 'GET',
+                        })
+                            .then((res) => res.json())
+                            .then((data) => data);
+                    break;
+                case 'View All Roles':
+                    viewRoleDB();
+                    break;
             }
 
     })
 };
 
-// // index.js
-// const inquirer = require('inquirer');
-
-// // Define your questions
-// const questions = [
-//     {
-//         type: 'list',
-//         name: 'choice',
-//         message: 'What do you want to do?',
-//         choices: [
-//             'Option 1',
-//             'Option 2',
-//             'Option 3'
-//         ]
-//     },
-//     {
-//         type: 'input',
-//         name: 'inputValue',
-//         message: 'Enter something:',
-//         when: answers => answers.choice === 'Option 1'  // Show this question only if Option 1 is selected
-//     },
-//     {
-//         type: 'confirm',
-//         name: 'confirmValue',
-//         message: 'Are you sure?',
-//         when: answers => answers.choice === 'Option 2'  // Show this question only if Option 2 is selected
-//     }
-// ];
-
-// // Function to start prompting
-// function startPrompt() {
-//     inquirer.prompt(questions)
-//         .then(answers => {
-//             console.log('Answers:', answers);
-//             // Handle answers here based on your logic
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//         });
-// }
-
-// // Start prompting
-// startPrompt();
-
-
-
-
-// function startPrompt() {
-//     inquirer.prompt(questions)
-//         .then(answers => {
-//             console.log('Answers:', answers);
-//             // Handle answers here based on your logic
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//         });
-// }
 init();
