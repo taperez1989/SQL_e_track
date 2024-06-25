@@ -1,7 +1,9 @@
 const inquirer = require("inquirer");
 const db = require('./connection');
-
-
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 5432;
+console.log(db);
 function addEmployeeDB() {
     inquirer
         .prompt([
@@ -93,28 +95,54 @@ function addDepartment() {
 }
 
 // this would be our ASYNC request to our database (for data)
-// function departmentsDB() {
-//     db.query("SELECT * FROM department;", function (error, data) {
-//         if (error) {
-//             console.log("error: ", error)
-//         }
+function getAllDepartmentsDB() {
+    const sql = "SELECT * FROM department;";
 
-//         console.log("data: ", data)
-//     })
-// }
+    db.query(sql, (err, { rows }) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
 
-//     // views the role database
-// function viewRoleDB() {
-//     const query = 'SELECT * FROM role';
-//     db.query(query, function (error, data) {
-//         if (error) {
-//             console.log("error: ", error)
-//             db.end();
-//         }
+    });
+};
 
-//         console.log("data: ", data)
-//     });
-// }
+    // views the role database
+function viewRoleDB() {
+    const query = 'SELECT * FROM role;';
+    db.query(query, (err, { rows }) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+    });
+}
+// views the employee database
+function viewAllEmployees() {
+    const query = 'SELECT * FROM employee;';
+    db.query(query, (err, { rows }) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+    });
+}
+
+function updateEmployee() {
+    const query = 'SELECT first_name FROM employee;';
+    db.query(query, (err, { rows }) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        console.table(rows)
+    });
+}
+
+
 
 function init() {
     inquirer
@@ -123,7 +151,7 @@ function init() {
             {
                 type: 'list',
                 message: 'What would you like to do?',
-                choices: ['Add employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department'],
+                choices: ['Add employee', 'View All Employees', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department'],
                 name: 'choices',
             },
         ])
@@ -143,19 +171,28 @@ function init() {
                     addDepartment();
                     break;
                 case 'View All Departments':
-                    // departmentsDB();
-                        fetch('/api/departments', {
-                            method: 'GET',
-                        })
-                            .then((res) => res.json())
-                            .then((data) => data);
+                    getAllDepartmentsDB();
                     break;
                 case 'View All Roles':
                     viewRoleDB();
                     break;
+                case 'View All Employees':
+                    viewAllEmployees();
+                    break;
+              
+                          
             }
 
     })
 };
 
-init();
+// Default response for any other request (Not Found)
+app.use((req, res) => {
+    res.status(404).end();
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    init();
+    
+});
