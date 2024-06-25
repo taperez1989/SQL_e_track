@@ -3,7 +3,7 @@ const db = require('./connection');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5432;
-console.log(db);
+
 function addEmployeeDB() {
     inquirer
         .prompt([
@@ -39,6 +39,7 @@ function addEmployeeDB() {
         // call on DB inquierer docu look into 'options'
         .then((answers) => {
             console.log(answers.confirm);
+            init();
     })
     
 }
@@ -72,6 +73,7 @@ function addRoleDB() {
         ])
         .then((answers) => {
             console.log(answers);
+            init();
         })
 
 }
@@ -88,7 +90,8 @@ function addDepartment() {
             },
         ])
         .then((data) => {
-            console.log(data); 
+            console.log(data);
+            init();
            
         })
 
@@ -103,7 +106,8 @@ function getAllDepartmentsDB() {
             res.status(500).json({ error: err.message });
             return;
         }
-        console.table(rows)
+        console.table(rows);
+        init();
 
     });
 };
@@ -116,7 +120,8 @@ function viewRoleDB() {
             res.status(500).json({ error: err.message });
             return;
         }
-        console.table(rows)
+        console.table(rows);
+        init();
     });
 }
 // views the employee database
@@ -127,11 +132,30 @@ function viewAllEmployees() {
             res.status(500).json({ error: err.message });
             return;
         }
-        console.table(rows)
+        console.table(rows);
+        init();
     });
 }
 
 function updateEmployee() {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: 'which employees role do you want to update?',
+                choices: ['John Doe', 'Mike Chan', 'Danny Bueno', 'David Rodriguez', 'Kevin Dominguez', 'Joel Pare', 'Christian Chavez', 'Jeana Chavez'],
+                name: 'updateEmp'
+            },
+            {
+                type: 'list',
+                message: 'which role do you want to assign the selected employee?',
+                choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer'],
+            }
+        ])
+        .then(() => {
+            init();
+        });
+
     const query = 'SELECT first_name FROM employee;';
     db.query(query, (err, { rows }) => {
         if (err) {
@@ -143,7 +167,6 @@ function updateEmployee() {
 }
 
 
-
 function init() {
     inquirer
         .prompt([
@@ -151,7 +174,7 @@ function init() {
             {
                 type: 'list',
                 message: 'What would you like to do?',
-                choices: ['Add employee', 'View All Employees', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department'],
+                choices: ['Add employee', 'View All Employees', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'exit'],
                 name: 'choices',
             },
         ])
@@ -179,11 +202,15 @@ function init() {
                 case 'View All Employees':
                     viewAllEmployees();
                     break;
-              
-                          
+                case 'Update Employee Role':
+                    updateEmployee();
+                    break;
+                case 'exit':
+                    process.exit();
+                    break;
             }
-
-    })
+            
+        });
 };
 
 // Default response for any other request (Not Found)

@@ -5,9 +5,7 @@ JOIN department ON role.department_id = department.id;
 
 
 
-SELECT * 
-FROM role 
-join employee
-    on employee.role_id = role.id
-join department
-    on role.department_id = department.id
+SELECT * FROM role 
+JOIN employee ON employee.role_id = role.id
+
+JOIN department ON role.department_id = department.id
