@@ -8,7 +8,7 @@ This challenge I had trouble getting the connection set up with the database and
 
 challenge was to create a employee tracker that links with a employee database. which you can view employees, the departments they are in and the roles of the employees. As well as updating the employees and the roles they are in. 
 
-video link:
+video link: https://drive.google.com/file/d/1NcWcObMlhD1J6kJnwowoW9Se7ebd7QKh/view
 
 repo link: https://github.com/taperez1989/SQL_e_track
 
