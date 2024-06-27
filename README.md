@@ -10,7 +10,7 @@ challenge was to create a employee tracker that links with a employee database. 
 
 video link:
 
-repo link: 
+repo link: https://github.com/taperez1989/SQL_e_track
 
 ##MIT License
 
